@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Don't run any code locally strictly, do both inference and training in google cloud.(vertex ai)

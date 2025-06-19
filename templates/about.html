@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}About - Deforestation Detection{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-md-8 offset-md-2">
+            <h1 class="display-4 mb-4">About Deforestation Detection</h1>
+            <p class="lead">
+                This application uses advanced AI-powered semantic segmentation to identify forest and deforested areas in satellite imagery.
+            </p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-8 offset-md-2">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h2 class="card-title h4 mb-0">How It Works</h2>
+                </div>
+                <div class="card-body">
+                    <ol class="mb-0">
+                        <li class="mb-3">
+                            <strong>Upload:</strong> Users upload satellite or aerial images of forest regions.
+                        </li>
+                        <li class="mb-3">
+                            <strong>Cloud Processing:</strong> Images are processed in Google Cloud using Vertex AI for semantic segmentation.
+                        </li>
+                        <li class="mb-3">
+                            <strong>Analysis:</strong> Each pixel is classified as either forest (green) or deforested (red).
+                        </li>
+                        <li class="mb-3">
+                            <strong>Visualization:</strong> Results are displayed as color-coded masks and overlays.
+                        </li>
+                        <li>
+                            <strong>Statistics:</strong> The system calculates the percentage of forest coverage and deforested area.
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="card-title h4 mb-0">Google Cloud Requirements</h2>
+                </div>
+                <div class="card-body">
+                    <p>This application requires a Google Cloud service account with the following permissions:</p>
+                    <ul>
+                        <li><strong>Storage Admin</strong> - For creating and managing GCS buckets</li>
+                        <li><strong>Storage Object Admin</strong> - For uploading/downloading files to/from GCS</li>
+                        <li><strong>Vertex AI User</strong> - For using Vertex AI models</li>
+                        <li><strong>Vertex AI Admin</strong> - For deploying models to endpoints</li>
+                    </ul>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> If you encounter permission errors, please ensure your service account has all the required roles assigned.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h2 class="card-title h4 mb-0">Technology Stack</h2>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> <strong>Frontend:</strong> HTML, CSS, JavaScript, Bootstrap</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> <strong>Backend:</strong> Python, Flask</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> <strong>Image Processing:</strong> OpenCV, NumPy</li>
+                        <li class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> <strong>Cloud Services:</strong> Google Cloud Storage, Vertex AI</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i> <strong>Deployment:</strong> Docker</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

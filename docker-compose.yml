@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./service_account.json:/app/service_account.json
+      - ./static/uploads:/app/static/uploads
+      - ./static/results:/app/static/results
+      - ./static/data:/app/static/data
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/service_account.json
+      - DEBUG=True
+      - PORT=8080
+    restart: unless-stopped 

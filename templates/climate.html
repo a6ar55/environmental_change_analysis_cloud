@@ -1,0 +1,2139 @@
+{% extends "base.html" %}
+
+{% block title %}Climate Analysis Dashboard{% endblock %}
+
+{% block content %}
+<div class="climate-container">
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-particles"></div>
+        <div class="gradient-overlay"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="hero-card">
+                        <div class="hero-content">
+                            <div class="hero-icon">
+                                <i class="bi bi-globe"></i>
+                                <div class="pulse-ring"></div>
+                                <div class="pulse-ring pulse-ring-delay"></div>
+                            </div>
+                            <h1 class="hero-title">
+                                Climate Intelligence
+                                <span class="gradient-text">Platform</span>
+                            </h1>
+                            <p class="hero-subtitle">
+                                Advanced environmental analytics powered by 
+                                <span class="highlight">Vertex AI</span> and real-time data
+                            </p>
+                            <div class="tech-badges">
+                                <div class="tech-badge">
+                                    <i class="bi bi-cpu-fill"></i>
+                                    <span>Neural Networks</span>
+                                </div>
+                                <div class="tech-badge">
+                                    <i class="bi bi-cloud-arrow-up-fill"></i>
+                                    <span>Cloud Computing</span>
+                                </div>
+                                <div class="tech-badge">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                    <span>Predictive Analytics</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-container">
+        <div class="loading-animation">
+            <div class="loading-sphere">
+                <div class="loading-ring"></div>
+                <div class="loading-ring"></div>
+                <div class="loading-ring"></div>
+            </div>
+            <div class="loading-text">
+                <h3>Analyzing Climate Data</h3>
+                <p>Connecting to Vertex AI models...</p>
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Display -->
+    <div id="error-display" class="error-container d-none">
+        <div class="error-card">
+            <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+            <h3>Connection Error</h3>
+            <p id="error-message">Unable to load climate data</p>
+            <button class="retry-btn" onclick="location.reload()">
+                <i class="bi bi-arrow-clockwise"></i>
+                Retry
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div id="dashboard-content" class="dashboard-content" style="display: none;">
+        <div class="container-fluid">
+            
+            <!-- Climate Summary Cards -->
+            <div class="stats-grid">
+                <div class="stat-card climate-status-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-thermometer-sun"></i>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Climate Status</h3>
+                        <div id="climate-status" class="stat-value">-</div>
+                        <p id="warming-rate" class="stat-subtitle">Per decade</p>
+                    </div>
+                    <div class="stat-pattern"></div>
+                </div>
+                <div class="stat-card anomaly-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-graph-up"></i>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Temperature Anomaly</h3>
+                        <div id="temp-anomaly" class="stat-value">-</div>
+                        <p class="stat-subtitle">From baseline</p>
+                    </div>
+                    <div class="stat-pattern"></div>
+                </div>
+
+                <div class="stat-card range-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-thermometer-half"></i>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Temperature Range</h3>
+                        <div id="temp-range" class="stat-value">-</div>
+                        <p class="stat-subtitle">Historical range</p>
+                    </div>
+                    <div class="stat-pattern"></div>
+                </div>
+
+                <div class="stat-card coverage-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-date"></i>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Data Coverage</h3>
+                        <div id="data-years" class="stat-value">-</div>
+                        <p class="stat-subtitle">Years of data</p>
+                    </div>
+                    <div class="stat-pattern"></div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <!-- Temperature Trends Chart -->
+                <div class="chart-container main-chart">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <h3>Global Temperature Trends</h3>
+                            <span class="chart-subtitle">Real-time climate data analysis</span>
+                        </div>
+                        <div class="chart-controls">
+                            <div class="control-group">
+                                <button class="control-btn active" data-period="annual">Annual</button>
+                                <button class="control-btn" data-period="decade">Decade</button>
+                                <button class="control-btn" data-period="recent">Recent 30Y</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="temperatureTrendsChart" height="300"></canvas>
+                        <div class="chart-overlay"></div>
+                    </div>
+                </div>
+
+                <!-- Seasonal Patterns Chart -->
+                <div class="chart-container seasonal-chart">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <i class="bi bi-calendar4-week"></i>
+                            <h3>Seasonal Patterns</h3>
+                            <span class="chart-subtitle">Monthly temperature analysis</span>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="seasonalChart" height="300"></canvas>
+                        <div class="chart-overlay"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Future Predictions and Analysis -->
+            <div class="predictions-section">
+                <!-- Future Predictions -->
+                <div class="chart-container predictions-chart">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <i class="bi bi-crystal-ball"></i>
+                            <h3>Future Temperature Predictions</h3>
+                            <span class="chart-subtitle">AI-powered climate forecasting</span>
+                        </div>
+                        <div class="prediction-controls">
+                            <div class="slider-container">
+                                <label for="yearSlider" class="slider-label">Years ahead:</label>
+                                <input type="range" class="custom-slider" id="yearSlider" min="1" max="10" value="5">
+                                <span id="yearValue" class="slider-value">5</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="predictionsChart" height="250"></canvas>
+                        <div class="chart-overlay"></div>
+                        <div id="prediction-summary" class="prediction-summary"></div>
+                    </div>
+                </div>
+
+                <!-- Climate Insights -->
+                <div class="chart-container insights-card">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <i class="bi bi-lightbulb"></i>
+                            <h3>Climate Insights</h3>
+                            <span class="chart-subtitle">Key environmental indicators</span>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <div class="insights-grid">
+                            <div class="insight-item">
+                                <div class="insight-icon hottest">
+                                    <i class="bi bi-thermometer-sun"></i>
+                                </div>
+                                <div class="insight-content">
+                                    <h6>Hottest Month</h6>
+                                    <span id="hottest-month">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="insight-item">
+                                <div class="insight-icon coldest">
+                                    <i class="bi bi-thermometer-snow"></i>
+                                </div>
+                                <div class="insight-content">
+                                    <h6>Coldest Month</h6>
+                                    <span id="coldest-month">-</span>
+                                </div>
+                            </div>
+                            
+                            <div class="insight-item">
+                                <div class="insight-icon updated">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                                <div class="insight-content">
+                                    <h6>Last Updated</h6>
+                                    <span id="last-updated">-</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="performance-section">
+                            <h6>Model Performance</h6>
+                            <div class="performance-bar">
+                                <div class="performance-fill"></div>
+                                <div class="performance-glow"></div>
+                            </div>
+                            <small>Vertex AI Model Accuracy: 100%</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Country Analysis Section -->
+            <div class="analysis-section">
+                <div class="chart-container country-analysis">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <i class="bi bi-geo-alt"></i>
+                            <h3>Country-Specific Analysis</h3>
+                            <span class="chart-subtitle">Regional climate data exploration</span>
+                        </div>
+                        <div class="search-container">
+                            <input type="text" class="country-search" id="countrySearch" placeholder="Search country (e.g., United States)">
+                            <button class="search-btn" type="button" id="searchCountryBtn">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <div id="country-analysis-content" class="country-content">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="bi bi-globe"></i>
+                                </div>
+                                <h4>Explore Country Climate Data</h4>
+                                <p>Enter a country name to see detailed climate analysis and trends</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Warming Countries -->
+            <div class="warming-section">
+                <div class="chart-container warming-countries">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <i class="bi bi-fire"></i>
+                            <h3>Top Warming Countries</h3>
+                            <span class="chart-subtitle">Countries with highest temperature increase rates</span>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <div id="warming-countries" class="warming-grid">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+/* Dark Theme Climate Dashboard */
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111111;
+    --bg-tertiary: #1a1a1a;
+    --bg-quaternary: #242424;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-tertiary: #808080;
+    --accent-primary: #00f5ff;
+    --accent-secondary: #ff6b35;
+    --accent-tertiary: #7b68ee;
+    --accent-success: #00ff87;
+    --accent-warning: #ffb800;
+    --accent-danger: #ff4757;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow-glow: 0 0 40px rgba(0, 245, 255, 0.15);
+    --shadow-card: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+}
+
+.climate-container {
+    min-height: 100vh;
+    position: relative;
+    background: var(--bg-primary);
+}
+
+/* Animated Background */
+.animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at 20% 80%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(123, 104, 238, 0.05) 0%, transparent 50%);
+}
+
+.floating-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.floating-particles::before,
+.floating-particles::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(0, 245, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 20s infinite ease-in-out;
+}
+
+.floating-particles::before {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-particles::after {
+    top: 60%;
+    right: 10%;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) rotate(240deg); }
+}
+
+.gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 0%, rgba(0, 245, 255, 0.02) 50%, transparent 100%);
+    animation: gradientShift 30s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 3rem 0;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+    padding: 4rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-glow);
+}
+
+.hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+    animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-icon {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.hero-icon i {
+    font-size: 4rem;
+    color: var(--accent-primary);
+    filter: drop-shadow(0 0 20px var(--accent-primary));
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    animation: pulse 2s ease-out infinite;
+    opacity: 0;
+}
+
+.pulse-ring-delay {
+    animation-delay: 0.5s;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    letter-spacing: -2px;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-tertiary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.highlight {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.tech-badges {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.tech-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.tech-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 245, 255, 0.2);
+    border-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
+.tech-badge i {
+    color: var(--accent-primary);
+    font-size: 1.1rem;
+}
+
+/* Loading Animation */
+.loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-animation {
+    text-align: center;
+}
+
+.loading-sphere {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+}
+
+.loading-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    animation: rotate 2s linear infinite;
+}
+
+.loading-ring:nth-child(1) {
+    border-top-color: var(--accent-primary);
+    animation-duration: 2s;
+}
+
+.loading-ring:nth-child(2) {
+    border-right-color: var(--accent-secondary);
+    animation-duration: 3s;
+    animation-direction: reverse;
+}
+
+.loading-ring:nth-child(3) {
+    border-bottom-color: var(--accent-tertiary);
+    animation-duration: 4s;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.loading-text p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.loading-dots span {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    animation: loadingDots 1.5s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes loadingDots {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+    30% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+
+/* Error Container */
+.error-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.error-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 400px;
+}
+
+.error-icon {
+    font-size: 3rem;
+    color: var(--accent-danger);
+    margin-bottom: 1rem;
+}
+
+.error-card h3 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.error-card p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.retry-btn {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 2rem;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 245, 255, 0.3);
+}
+
+/* Dashboard Content */
+.dashboard-content {
+    position: relative;
+    z-index: 2;
+    padding: 2rem 0;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-card);
+    border-color: var(--accent-primary);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-tertiary));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.stat-card:hover::before {
+    transform: scaleX(1);
+}
+
+.stat-icon {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+.stat-icon i {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(0, 245, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: iconGlow 3s ease-in-out infinite;
+}
+
+@keyframes iconGlow {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+}
+
+.stat-content {
+    position: relative;
+    z-index: 2;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+
+.stat-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    margin: 0;
+}
+
+.stat-pattern {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30px, -30px);
+}
+
+/* Charts Section */
+.charts-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.chart-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.4s ease;
+}
+
+.chart-container:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-card);
+    border-color: var(--accent-primary);
+}
+
+.chart-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.chart-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.chart-title i {
+    font-size: 1.5rem;
+    color: var(--accent-primary);
+}
+
+.chart-title h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.chart-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 0.25rem;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.control-group {
+    display: flex;
+    background: var(--bg-quaternary);
+    border-radius: 12px;
+    padding: 0.25rem;
+    gap: 0.25rem;
+}
+
+.control-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.control-btn:hover {
+    color: var(--text-primary);
+    background: var(--glass-bg);
+}
+
+.control-btn.active {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 245, 255, 0.3);
+}
+
+.chart-body {
+    padding: 2rem;
+    position: relative;
+    min-height: 350px;
+}
+
+.chart-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 0%, rgba(0, 245, 255, 0.01) 50%, transparent 100%);
+    pointer-events: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .tech-badges {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .chart-body {
+        padding: 1rem;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--accent-tertiary), var(--accent-primary));
+}
+
+/* Selection */
+::selection {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+}
+
+/* Focus styles */
+.control-btn:focus,
+.retry-btn:focus {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* Predictions Section */
+.predictions-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.slider-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.custom-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--bg-quaternary);
+    outline: none;
+    cursor: pointer;
+}
+
+.custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 245, 255, 0.4);
+    transition: all 0.3s ease;
+}
+
+.custom-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 20px rgba(0, 245, 255, 0.6);
+}
+
+.custom-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 245, 255, 0.4);
+}
+
+.slider-value {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-width: 30px;
+    text-align: center;
+}
+
+.prediction-summary {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+/* Insights Section */
+.insights-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.insight-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.insight-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--accent-primary);
+    transform: translateX(5px);
+}
+
+.insight-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    position: relative;
+}
+
+.insight-icon.hottest {
+    background: linear-gradient(135deg, var(--accent-danger), #ff8a80);
+    color: white;
+}
+
+.insight-icon.coldest {
+    background: linear-gradient(135deg, #64b5f6, var(--accent-primary));
+    color: white;
+}
+
+.insight-icon.updated {
+    background: linear-gradient(135deg, var(--accent-warning), #ffcc02);
+    color: white;
+}
+
+.insight-content h6 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.insight-content span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.performance-section {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.performance-section h6 {
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.performance-bar {
+    position: relative;
+    height: 8px;
+    background: var(--bg-quaternary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.performance-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, var(--accent-success), var(--accent-primary));
+    border-radius: 4px;
+    animation: fillAnimation 2s ease-out;
+}
+
+.performance-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 30%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: glowSlide 3s ease-in-out infinite;
+}
+
+@keyframes fillAnimation {
+    0% { width: 0%; }
+    100% { width: 100%; }
+}
+
+@keyframes glowSlide {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(250%); }
+    100% { transform: translateX(-100%); }
+}
+
+.performance-section small {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+/* Search Section */
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.country-search {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    width: 250px;
+    transition: all 0.3s ease;
+}
+
+.country-search:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.country-search::placeholder {
+    color: var(--text-tertiary);
+}
+
+.search-btn {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 245, 255, 0.3);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.empty-icon {
+    margin-bottom: 1.5rem;
+}
+
+.empty-icon i {
+    font-size: 4rem;
+    color: var(--text-tertiary);
+    opacity: 0.5;
+}
+
+.empty-state h4 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Warming Countries Grid */
+.warming-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.country-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.country-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-danger);
+    box-shadow: 0 10px 30px rgba(255, 71, 87, 0.2);
+}
+
+.country-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-danger), var(--accent-secondary));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.country-card:hover::before {
+    transform: scaleX(1);
+}
+
+.country-rank {
+    background: linear-gradient(135deg, var(--accent-danger), var(--accent-secondary));
+    color: white;
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.country-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.country-trend {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--accent-danger);
+    margin-bottom: 0.25rem;
+}
+
+.country-label {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+}
+
+/* Section Spacing */
+.predictions-section,
+.analysis-section,
+.warming-section {
+    margin-bottom: 3rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .predictions-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .country-search {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .warming-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    
+    .slider-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+         .custom-slider {
+         width: 100%;
+     }
+ }
+
+/* Prediction Summary Components */
+.prediction-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.prediction-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.prediction-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent-primary);
+}
+
+.prediction-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    color: white;
+    flex-shrink: 0;
+}
+
+.prediction-icon.warming {
+    background: linear-gradient(135deg, var(--accent-danger), var(--accent-secondary));
+}
+
+.prediction-icon.cooling {
+    background: linear-gradient(135deg, var(--accent-primary), #64b5f6);
+}
+
+.prediction-content {
+    flex: 1;
+}
+
+.prediction-content h6 {
+    margin: 0 0 0.75rem 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.prediction-values {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.prediction-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.prediction-value .year {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.prediction-value .temp {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.change-value {
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 0.25rem;
+}
+
+.change-value.warming {
+    color: var(--accent-danger);
+}
+
+.change-value.cooling {
+    color: var(--accent-primary);
+}
+
+.change-label {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+    line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+    .prediction-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .prediction-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .prediction-values {
+        align-items: center;
+    }
+}
+</style>
+
+<script>
+// Climate Dashboard JavaScript
+class ClimateDashboard {
+    constructor() {
+        this.charts = {};
+        this.data = {};
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.loadDashboardData();
+    }
+
+    setupEventListeners() {
+        // Year slider for predictions
+        const yearSlider = document.getElementById('yearSlider');
+        const yearValue = document.getElementById('yearValue');
+        
+        yearSlider.addEventListener('input', (e) => {
+            yearValue.textContent = e.target.value;
+            this.loadPredictions(parseInt(e.target.value));
+        });
+
+        // Period buttons for trends
+        document.querySelectorAll('[data-period]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('[data-period]').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.updateTrendsChart(e.target.dataset.period);
+            });
+        });
+
+        // Country search
+        document.getElementById('searchCountryBtn').addEventListener('click', () => {
+            this.searchCountry();
+        });
+
+        document.getElementById('countrySearch').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.searchCountry();
+            }
+        });
+    }
+
+    async loadDashboardData() {
+        try {
+            // Load all data in parallel
+            const [summaryResponse, trendsResponse, seasonalResponse] = await Promise.all([
+                fetch('/api/climate/summary'),
+                fetch('/api/climate/trends'),
+                fetch('/api/climate/seasonal')
+            ]);
+
+            if (!summaryResponse.ok || !trendsResponse.ok || !seasonalResponse.ok) {
+                throw new Error('Failed to load climate data');
+            }
+
+            const summary = await summaryResponse.json();
+            const trends = await trendsResponse.json();
+            const seasonal = await seasonalResponse.json();
+
+            if (!summary.success || !trends.success || !seasonal.success) {
+                throw new Error(summary.error || trends.error || seasonal.error);
+            }
+
+            this.data.summary = summary.data;
+            this.data.trends = trends.data;
+            this.data.seasonal = seasonal.data;
+
+            this.updateSummaryCards();
+            this.createTrendsChart();
+            this.createSeasonalChart();
+            this.loadPredictions(5); // Load 5-year predictions
+            this.loadTopWarmingCountries();
+
+            // Hide loading, show dashboard
+            document.getElementById('loading-indicator').style.display = 'none';
+            document.getElementById('dashboard-content').style.display = 'block';
+
+        } catch (error) {
+            console.error('Error loading dashboard data:', error);
+            this.showError(error.message);
+        }
+    }
+
+    updateSummaryCards() {
+        const summary = this.data.summary;
+        
+        // Climate status with color
+        const statusElement = document.getElementById('climate-status');
+        statusElement.textContent = summary.climate_status;
+        statusElement.className = `fw-bold text-${summary.status_color}`;
+
+        // Warming rate
+        document.getElementById('warming-rate').textContent = 
+            `${summary.warming_rate_per_decade > 0 ? '+' : ''}${summary.warming_rate_per_decade}°C per decade`;
+
+        // Temperature anomaly
+        const anomalyElement = document.getElementById('temp-anomaly');
+        anomalyElement.textContent = `${summary.current_anomaly > 0 ? '+' : ''}${summary.current_anomaly}°C`;
+        anomalyElement.className = `fw-bold ${summary.current_anomaly > 0 ? 'text-danger' : 'text-info'}`;
+
+        // Temperature range
+        document.getElementById('temp-range').textContent = 
+            `${summary.temperature_range.min}°C to ${summary.temperature_range.max}°C`;
+
+        // Data years
+        document.getElementById('data-years').textContent = summary.data_years;
+
+        // Climate insights
+        document.getElementById('hottest-month').textContent = summary.hottest_month;
+        document.getElementById('coldest-month').textContent = summary.coldest_month;
+        document.getElementById('last-updated').textContent = summary.last_updated;
+    }
+
+    createTrendsChart() {
+        const ctx = document.getElementById('temperatureTrendsChart').getContext('2d');
+        
+        this.charts.trends = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: this.data.trends.annual_data.map(d => d.Year),
+                datasets: [{
+                    label: 'Actual Temperature',
+                    data: this.data.trends.annual_data.map(d => d.LandAverageTemperature),
+                    borderColor: '#00f5ff',
+                    backgroundColor: 'rgba(0, 245, 255, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#00f5ff',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 6
+                }, {
+                    label: 'Predicted Temperature',
+                    data: this.data.trends.annual_data.map(d => d.Predicted_Temperature),
+                    borderColor: '#7b68ee',
+                    backgroundColor: 'rgba(123, 104, 238, 0.1)',
+                    borderWidth: 3,
+                    fill: false,
+                    borderDash: [8, 4],
+                    tension: 0.4,
+                    pointBackgroundColor: '#7b68ee',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 3,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#b0b0b0',
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#b0b0b0',
+                        borderColor: '#00f5ff',
+                        borderWidth: 1,
+                        cornerRadius: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            size: 12
+                        },
+                        padding: 12
+                    }
+                },
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)',
+                            color: '#b0b0b0',
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            }
+                        },
+                        ticks: {
+                            color: '#808080',
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year',
+                            color: '#b0b0b0',
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            }
+                        },
+                        ticks: {
+                            color: '#808080',
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    createSeasonalChart() {
+        const ctx = document.getElementById('seasonalChart').getContext('2d');
+        
+        this.charts.seasonal = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: this.data.seasonal.map(d => d.Month_Name),
+                datasets: [{
+                    label: 'Average Temperature',
+                    data: this.data.seasonal.map(d => d.Avg_Temperature),
+                    borderColor: '#00ff87',
+                    backgroundColor: 'rgba(0, 255, 135, 0.15)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#00ff87',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#b0b0b0',
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#b0b0b0',
+                        borderColor: '#00ff87',
+                        borderWidth: 1,
+                        cornerRadius: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            size: 12
+                        },
+                        padding: 12
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)',
+                            color: '#b0b0b0',
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            }
+                        },
+                        ticks: {
+                            color: '#808080',
+                            font: {
+                                size: 10
+                            },
+                            backdropColor: 'transparent'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        angleLines: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        pointLabels: {
+                            color: '#b0b0b0',
+                            font: {
+                                size: 11,
+                                weight: '500'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    async loadPredictions(years) {
+        try {
+            const response = await fetch(`/api/climate/predictions?years=${years}`);
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.error);
+            }
+
+            this.createPredictionsChart(result.data);
+            this.updatePredictionSummary(result.data, years);
+
+        } catch (error) {
+            console.error('Error loading predictions:', error);
+        }
+    }
+
+    createPredictionsChart(predictions) {
+        const ctx = document.getElementById('predictionsChart').getContext('2d');
+        
+        if (this.charts.predictions) {
+            this.charts.predictions.destroy();
+        }
+
+        // Group by year for annual averages
+        const yearlyPredictions = {};
+        predictions.forEach(p => {
+            if (!yearlyPredictions[p.year]) {
+                yearlyPredictions[p.year] = [];
+            }
+            yearlyPredictions[p.year].push(p.predicted_temperature);
+        });
+
+        const yearlyData = Object.keys(yearlyPredictions).map(year => ({
+            year: parseInt(year),
+            temp: yearlyPredictions[year].reduce((a, b) => a + b) / yearlyPredictions[year].length
+        }));
+
+        this.charts.predictions = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: yearlyData.map(d => d.year),
+                datasets: [{
+                    label: 'Predicted Temperature',
+                    data: yearlyData.map(d => d.temp),
+                    borderColor: '#ffb800',
+                    backgroundColor: 'rgba(255, 184, 0, 0.15)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#ffb800',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#b0b0b0',
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(26, 26, 26, 0.95)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#b0b0b0',
+                        borderColor: '#ffb800',
+                        borderWidth: 1,
+                        cornerRadius: 12,
+                        titleFont: {
+                            size: 14,
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            size: 12
+                        },
+                        padding: 12
+                    }
+                },
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)',
+                            color: '#b0b0b0',
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            }
+                        },
+                        ticks: {
+                            color: '#808080',
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year',
+                            color: '#b0b0b0',
+                            font: {
+                                size: 12,
+                                weight: '500'
+                            }
+                        },
+                        ticks: {
+                            color: '#808080',
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    updatePredictionSummary(predictions, years) {
+        const firstYear = predictions[0];
+        const lastYear = predictions[predictions.length - 1];
+        const tempChange = lastYear.predicted_temperature - firstYear.predicted_temperature;
+        
+        const summaryHtml = `
+            <div class="prediction-grid">
+                <div class="prediction-item">
+                    <div class="prediction-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <div class="prediction-content">
+                        <h6>Temperature Projection</h6>
+                        <div class="prediction-values">
+                            <div class="prediction-value">
+                                <span class="year">${firstYear.year}:</span>
+                                <span class="temp">${firstYear.predicted_temperature.toFixed(2)}°C</span>
+                            </div>
+                            <div class="prediction-value">
+                                <span class="year">${lastYear.year}:</span>
+                                <span class="temp">${lastYear.predicted_temperature.toFixed(2)}°C</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="prediction-item">
+                    <div class="prediction-icon ${tempChange > 0 ? 'warming' : 'cooling'}">
+                        <i class="bi bi-${tempChange > 0 ? 'arrow-up' : 'arrow-down'}"></i>
+                    </div>
+                    <div class="prediction-content">
+                        <h6>Expected Change</h6>
+                        <div class="change-value ${tempChange > 0 ? 'warming' : 'cooling'}">
+                            ${tempChange > 0 ? '+' : ''}${tempChange.toFixed(2)}°C
+                        </div>
+                        <div class="change-label">
+                            over ${years} years • ${tempChange > 0 ? 'Warming trend' : 'Cooling trend'}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('prediction-summary').innerHTML = summaryHtml;
+    }
+
+    updateTrendsChart(period) {
+        let data;
+        switch(period) {
+            case 'decade':
+                data = this.data.trends.decade_data;
+                this.charts.trends.data.labels = data.map(d => `${d.Decade}s`);
+                this.charts.trends.data.datasets[0].data = data.map(d => d.LandAverageTemperature);
+                this.charts.trends.data.datasets[1].data = []; // No predictions for decades
+                break;
+            case 'recent':
+                data = this.data.trends.recent_trend;
+                this.charts.trends.data.labels = data.map(d => d.Year);
+                this.charts.trends.data.datasets[0].data = data.map(d => d.LandAverageTemperature);
+                this.charts.trends.data.datasets[1].data = data.map(d => d.Predicted_Temperature);
+                break;
+            default: // annual
+                data = this.data.trends.annual_data;
+                this.charts.trends.data.labels = data.map(d => d.Year);
+                this.charts.trends.data.datasets[0].data = data.map(d => d.LandAverageTemperature);
+                this.charts.trends.data.datasets[1].data = data.map(d => d.Predicted_Temperature);
+        }
+        this.charts.trends.update();
+    }
+
+    async searchCountry() {
+        const countryName = document.getElementById('countrySearch').value.trim();
+        if (!countryName) return;
+
+        try {
+            const response = await fetch(`/api/climate/countries?country=${encodeURIComponent(countryName)}`);
+            const result = await response.json();
+
+            const contentDiv = document.getElementById('country-analysis-content');
+
+            if (!result.success) {
+                contentDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        ${result.error}
+                    </div>
+                `;
+                return;
+            }
+
+            const data = result.data;
+            contentDiv.innerHTML = `
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 class="text-primary">${data.country_name}</h5>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p><strong>Average Temperature:</strong> ${data.avg_temperature.toFixed(2)}°C</p>
+                                <p><strong>Temperature Trend:</strong> 
+                                    <span class="${data.temperature_trend > 0 ? 'text-danger' : 'text-info'}">
+                                        ${data.temperature_trend > 0 ? '+' : ''}${data.temperature_trend.toFixed(4)}°C/year
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p><strong>Data Points:</strong> ${data.data_points}</p>
+                                <p><strong>Status:</strong> 
+                                    <span class="badge ${data.temperature_trend > 0.01 ? 'bg-danger' : data.temperature_trend > 0 ? 'bg-warning' : 'bg-success'}">
+                                        ${data.temperature_trend > 0.01 ? 'Rapid Warming' : data.temperature_trend > 0 ? 'Warming' : 'Stable/Cooling'}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="display-6 ${data.temperature_trend > 0 ? 'text-danger' : 'text-info'}">
+                            <i class="bi bi-${data.temperature_trend > 0 ? 'thermometer-sun' : 'thermometer-snow'}"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        } catch (error) {
+            console.error('Error searching country:', error);
+            document.getElementById('country-analysis-content').innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Error loading country data: ${error.message}
+                </div>
+            `;
+        }
+    }
+
+    async loadTopWarmingCountries() {
+        try {
+            const response = await fetch('/api/climate/countries');
+            const result = await response.json();
+
+            if (!result.success) return;
+
+            const countries = result.data.top_warming_countries.slice(0, 6); // Top 6
+            const html = countries.map((country, index) => `
+                <div class="country-card">
+                    <div class="country-rank">#${index + 1}</div>
+                    <div class="country-name">${country.country}</div>
+                    <div class="country-trend">+${country.trend.toFixed(3)}°C</div>
+                    <div class="country-label">per year</div>
+                </div>
+            `).join('');
+
+            document.getElementById('warming-countries').innerHTML = html;
+
+        } catch (error) {
+            console.error('Error loading top warming countries:', error);
+        }
+    }
+
+    showError(message) {
+        document.getElementById('loading-indicator').style.display = 'none';
+        document.getElementById('error-message').textContent = message;
+        document.getElementById('error-display').classList.remove('d-none');
+    }
+}
+
+// Initialize dashboard when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new ClimateDashboard();
+});
+</script>
+{% endblock %} 

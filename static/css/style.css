@@ -1,0 +1,87 @@
+/* Custom styles for Deforestation Detection App */
+
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.upload-container {
+    border: 2px dashed #28a745;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#file-upload-label {
+    cursor: pointer;
+}
+
+footer {
+    margin-top: 50px;
+}
+
+.progress {
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.img-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.img-fluid {
+    width: 100%;
+    height: auto;
+}
+
+/* Legend styling */
+.legend {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border-radius: 3px;
+}
+
+.forest-color {
+    background-color: #28a745;
+}
+
+.deforested-color {
+    background-color: #dc3545;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 15px;
+    }
+} 
