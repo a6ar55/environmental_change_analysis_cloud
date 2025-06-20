@@ -1,131 +1,1145 @@
 {% extends "base.html" %}
 
-{% block title %}Deforestation Detection{% endblock %}
+{% block title %}Environmental Analysis Platform{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row mb-5">
-        <div class="col-md-8 offset-md-2 text-center">
-            <h1 class="display-4 mb-3">Deforestation Detection</h1>
-            <p class="lead">Upload a satellite image to detect forest and deforested areas using AI-powered semantic segmentation.</p>
+<div class="deforestation-container">
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-particles"></div>
+        <div class="gradient-overlay"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="hero-card">
+                        <div class="hero-content">
+                            <div class="hero-icon">
+                                <i class="bi bi-tree-fill"></i>
+                                <div class="pulse-ring"></div>
+                                <div class="pulse-ring pulse-ring-delay"></div>
+                            </div>
+                            <h1 class="hero-title">
+                                Forest Intelligence
+                                <span class="gradient-text">Platform</span>
+                            </h1>
+                            <p class="hero-subtitle">
+                                AI-powered deforestation detection using 
+                                <span class="highlight">Vertex AI</span> and satellite imagery
+                            </p>
+                            <div class="tech-badges">
+                                <div class="tech-badge">
+                                    <i class="bi bi-cpu-fill"></i>
+                                    <span>Machine Learning</span>
+                                </div>
+                                <div class="tech-badge">
+                                    <i class="bi bi-camera-fill"></i>
+                                    <span>Computer Vision</span>
+                                </div>
+                                <div class="tech-badge">
+                                    <i class="bi bi-globe-americas"></i>
+                                    <span>Environmental AI</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row mb-5">
-        <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title mb-4">Upload Image</h2>
-                    
-                    <form id="upload-form" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="file-input" class="form-label">Select a satellite or aerial image</label>
-                            <input type="file" class="form-control" id="file-input" name="file" accept="image/*" required>
-                            <div class="form-text">Supported formats: JPG, PNG, TIFF</div>
+    <!-- Upload Section -->
+    <div class="upload-section">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="upload-card">
+                        <div class="upload-header">
+                            <div class="upload-title">
+                                <i class="bi bi-cloud-upload-fill"></i>
+                                <h3>Analyze Satellite Imagery</h3>
+                                <span class="upload-subtitle">Upload your satellite or aerial image for AI analysis</span>
+                            </div>
                         </div>
-                        
-                        <div id="preview-container" class="mb-3" style="display: none;">
-                            <h5>Preview:</h5>
-                            <img id="image-preview" class="img-fluid img-thumbnail" alt="Image preview">
+                        <div class="upload-body">
+                            <form id="upload-form" enctype="multipart/form-data">
+                                <div class="file-upload-container">
+                                    <div class="file-drop-zone" id="file-drop-zone">
+                                        <div class="file-upload-content">
+                                            <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                                            <h4>Drop your image here</h4>
+                                            <p>or click to browse files</p>
+                                            <div class="file-formats">
+                                                <span class="format-badge">JPG</span>
+                                                <span class="format-badge">PNG</span>
+                                                <span class="format-badge">TIFF</span>
+                                            </div>
+                                        </div>
+                                        <input type="file" id="file-input" name="file" accept="image/*" required style="display: none;">
+                                    </div>
+                                    
+                                    <div id="preview-container" class="preview-container" style="display: none;">
+                                        <div class="preview-card">
+                                            <div class="preview-header">
+                                                <h5><i class="bi bi-eye-fill"></i> Image Preview</h5>
+                                                <button type="button" class="remove-btn" id="remove-image">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </div>
+                                            <div class="preview-image-container">
+                                                <img id="image-preview" class="preview-image" alt="Image preview">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="upload-actions">
+                                    <button id="upload-button" type="submit" class="analyze-btn" disabled>
+                                        <div class="btn-content">
+                                            <i class="bi bi-cpu-fill"></i>
+                                            <span>Analyze with AI</span>
+                                        </div>
+                                        <div class="btn-glow"></div>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        
-                        <button id="upload-button" type="submit" class="btn btn-primary" disabled>
-                            <i class="bi bi-cloud-upload"></i> Analyze Image
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Loading Spinner -->
-    <div id="loading-spinner" class="row mb-5" style="display: none;">
-        <div class="col-md-8 offset-md-2 text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+    <div id="loading-spinner" class="loading-container" style="display: none;">
+        <div class="loading-animation">
+            <div class="loading-sphere">
+                <div class="loading-ring"></div>
+                <div class="loading-ring"></div>
+                <div class="loading-ring"></div>
             </div>
-            <p class="mt-2">Processing image... This may take a moment.</p>
+            <div class="loading-text">
+                <h3>Processing Satellite Image</h3>
+                <p>Running AI segmentation analysis...</p>
+                <div class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Error Message -->
-    <div id="error-container" class="row mb-5" style="display: none;">
-        <div class="col-md-8 offset-md-2">
-            <div class="alert alert-danger">
-                <h4 class="alert-heading">Error</h4>
-                <div id="error-message"></div>
-            </div>
+    <div id="error-container" class="error-container" style="display: none;">
+        <div class="error-card">
+            <i class="bi bi-exclamation-triangle-fill error-icon"></i>
+            <h3>Processing Error</h3>
+            <p id="error-message">An error occurred during analysis</p>
+            <button class="retry-btn" onclick="location.reload()">
+                <i class="bi bi-arrow-clockwise"></i>
+                Try Again
+            </button>
         </div>
     </div>
 
-    <!-- Results -->
-    <div id="results-container" class="row" style="display: none;">
-        <div class="col-md-8 offset-md-2">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="card-title mb-0">Analysis Results</h3>
+    <!-- Results Section -->
+    <div id="results-container" class="results-section" style="display: none;">
+        <div class="container-fluid">
+            <div class="results-header">
+                <h2><i class="bi bi-graph-up-arrow"></i> Analysis Results</h2>
+                <p>AI-powered forest coverage analysis complete</p>
+            </div>
+            
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card forest-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-tree-fill"></i>
+                        <div class="icon-glow forest-glow"></div>
+                    </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Forest Coverage</h3>
+                        <div id="forest-percentage" class="stat-value">0%</div>
+                        <div class="progress-ring">
+                            <svg class="progress-circle" width="120" height="120">
+                                <circle cx="60" cy="60" r="50" class="progress-bg"></circle>
+                                <circle id="forest-progress" cx="60" cy="60" r="50" class="progress-bar forest-progress"></circle>
+                            </svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <h4>Forest Coverage</h4>
-                    <div class="progress mb-4" style="height: 25px;">
-                        <div id="forest-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <span id="forest-percentage">0%</span>
-                        </div>
-                        <div id="deforested-bar" class="progress-bar bg-danger" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                            <span id="deforested-percentage">0%</span>
-                        </div>
+                
+                <div class="stat-card deforested-card">
+                    <div class="stat-icon">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div class="icon-glow deforested-glow"></div>
                     </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-success" style="width: 20px; height: 20px; margin-right: 10px;"></div>
-                                <span>Forest: <strong id="forest-percentage-text">0%</strong></span>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="d-flex align-items-center">
-                                <div class="bg-danger" style="width: 20px; height: 20px; margin-right: 10px;"></div>
-                                <span>Deforested: <strong id="deforested-percentage-text">0%</strong></span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-header">Original Image</div>
-                                <div class="card-body p-0">
-                                    <img id="original-image" class="img-fluid" alt="Original Image">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-header">Segmentation Mask</div>
-                                <div class="card-body p-0">
-                                    <img id="segmentation-image" class="img-fluid" alt="Segmentation Mask">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-header">Overlay</div>
-                                <div class="card-body p-0">
-                                    <img id="overlay-image" class="img-fluid" alt="Overlay Image">
-                                </div>
-                            </div>
+                    <div class="stat-content">
+                        <h3 class="stat-label">Deforested Area</h3>
+                        <div id="deforested-percentage" class="stat-value">0%</div>
+                        <div class="progress-ring">
+                            <svg class="progress-circle" width="120" height="120">
+                                <circle cx="60" cy="60" r="50" class="progress-bg"></circle>
+                                <circle id="deforested-progress" cx="60" cy="60" r="50" class="progress-bar deforested-progress"></circle>
+                            </svg>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <div class="text-center">
-                <p class="text-muted">
-                    <small>Powered by Google Cloud Vertex AI</small>
-                </p>
+            <!-- Image Results -->
+            <div class="images-grid">
+                <div class="image-card">
+                    <div class="image-header">
+                        <i class="bi bi-image-fill"></i>
+                        <h4>Original Image</h4>
+                    </div>
+                    <div class="image-body">
+                        <img id="original-image" class="result-image" alt="Original Image">
+                        <div class="image-overlay">
+                            <div class="overlay-content">
+                                <i class="bi bi-fullscreen"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <div class="image-header">
+                        <i class="bi bi-grid-fill"></i>
+                        <h4>Segmentation Mask</h4>
+                    </div>
+                    <div class="image-body">
+                        <img id="segmentation-image" class="result-image" alt="Segmentation Mask">
+                        <div class="image-overlay">
+                            <div class="overlay-content">
+                                <i class="bi bi-fullscreen"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <div class="image-header">
+                        <i class="bi bi-layers-fill"></i>
+                        <h4>Overlay Analysis</h4>
+                    </div>
+                    <div class="image-body">
+                        <img id="overlay-image" class="result-image" alt="Overlay Image">
+                        <div class="image-overlay">
+                            <div class="overlay-content">
+                                <i class="bi bi-fullscreen"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="legend-card">
+                <h5><i class="bi bi-info-circle-fill"></i> Analysis Legend</h5>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-color forest-legend"></div>
+                        <span>Forest Area - Healthy vegetation detected by AI</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color deforested-legend"></div>
+                        <span>Deforested Area - Cleared or damaged land</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="powered-by">
+                <p><i class="bi bi-cloud-fill"></i> Powered by Google Cloud Vertex AI</p>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* Deforestation Detection Dark Theme */
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111111;
+    --bg-tertiary: #1a1a1a;
+    --bg-quaternary: #242424;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-tertiary: #808080;
+    --accent-primary: #00ff87;
+    --accent-secondary: #ff4757;
+    --accent-tertiary: #7b68ee;
+    --accent-warning: #ffb800;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --shadow-glow: 0 0 40px rgba(0, 255, 135, 0.15);
+    --shadow-card: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+}
+
+.deforestation-container {
+    min-height: 100vh;
+    position: relative;
+    background: var(--bg-primary);
+}
+
+/* Animated Background */
+.animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at 20% 80%, rgba(0, 255, 135, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 71, 87, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(123, 104, 238, 0.05) 0%, transparent 50%);
+}
+
+.floating-particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.floating-particles::before,
+.floating-particles::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(0, 255, 135, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 20s infinite ease-in-out;
+}
+
+.floating-particles::before {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-particles::after {
+    top: 60%;
+    right: 10%;
+    background: radial-gradient(circle, rgba(255, 71, 87, 0.1) 0%, transparent 70%);
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(30px, -30px) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) rotate(240deg); }
+}
+
+.gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 0%, rgba(0, 255, 135, 0.02) 50%, transparent 100%);
+    animation: gradientShift 30s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 3rem 0;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+    padding: 4rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-glow);
+}
+
+.hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+    animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-icon {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.hero-icon i {
+    font-size: 4rem;
+    color: var(--accent-primary);
+    filter: drop-shadow(0 0 20px var(--accent-primary));
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    border: 2px solid var(--accent-primary);
+    border-radius: 50%;
+    animation: pulse 2s ease-out infinite;
+    opacity: 0;
+}
+
+.pulse-ring-delay {
+    animation-delay: 0.5s;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1.4rem;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+}
+
+.highlight {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.tech-badges {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.tech-badge {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.tech-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 255, 135, 0.2);
+}
+
+.tech-badge i {
+    color: var(--accent-primary);
+}
+
+/* Upload Section */
+.upload-section {
+    padding: 2rem 0;
+    position: relative;
+    z-index: 2;
+}
+
+.upload-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+}
+
+.upload-header {
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.upload-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.upload-title i {
+    font-size: 2.5rem;
+    color: var(--accent-primary);
+}
+
+.upload-title h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.upload-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.upload-body {
+    padding: 2rem;
+}
+
+.file-drop-zone {
+    border: 2px dashed var(--glass-border);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.file-drop-zone:hover {
+    border-color: var(--accent-primary);
+    background: rgba(0, 255, 135, 0.05);
+}
+
+.file-drop-zone.dragover {
+    border-color: var(--accent-primary);
+    background: rgba(0, 255, 135, 0.1);
+    transform: scale(1.02);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: var(--accent-primary);
+    margin-bottom: 1rem;
+}
+
+.file-upload-content h4 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.file-upload-content p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.file-formats {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.format-badge {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.preview-container {
+    margin-top: 2rem;
+}
+
+.preview-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.preview-header h5 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: var(--accent-secondary);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.remove-btn:hover {
+    background: rgba(255, 71, 87, 0.1);
+}
+
+.preview-image-container {
+    padding: 1rem;
+}
+
+.preview-image {
+    width: 100%;
+    border-radius: 12px;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+.upload-actions {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.analyze-btn {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    border: none;
+    border-radius: 16px;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--bg-primary);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.analyze-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.analyze-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px rgba(0, 255, 135, 0.4);
+}
+
+.btn-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.btn-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.analyze-btn:hover .btn-glow {
+    transform: translateX(100%);
+}
+
+/* Loading Animation */
+.loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-animation {
+    text-align: center;
+}
+
+.loading-sphere {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+}
+
+.loading-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-top-color: var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+
+.loading-ring:nth-child(2) {
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+    border-top-color: var(--accent-secondary);
+    animation-delay: -0.4s;
+}
+
+.loading-ring:nth-child(3) {
+    width: 60%;
+    height: 60%;
+    top: 20%;
+    left: 20%;
+    border-top-color: var(--accent-tertiary);
+    animation-delay: -0.8s;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.loading-text p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.loading-dots span {
+    width: 8px;
+    height: 8px;
+    background: var(--accent-primary);
+    border-radius: 50%;
+    animation: bounce 1.4s ease-in-out infinite both;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% { transform: scale(0); }
+    40% { transform: scale(1); }
+}
+
+/* Error Container */
+.error-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    text-align: center;
+    max-width: 500px;
+    margin: 2rem;
+}
+
+.error-icon {
+    font-size: 3rem;
+    color: var(--accent-secondary);
+    margin-bottom: 1rem;
+}
+
+.error-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.error-card p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.retry-btn {
+    background: linear-gradient(135deg, var(--accent-secondary), #ff8a80);
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem 1.5rem;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 auto;
+}
+
+.retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);
+}
+
+/* Results Section */
+.results-section {
+    padding: 3rem 0;
+    position: relative;
+    z-index: 2;
+}
+
+.results-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.results-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.results-header i {
+    color: var(--accent-primary);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.08) 0%, 
+        rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-icon {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.stat-icon i {
+    font-size: 2.5rem;
+}
+
+.forest-card .stat-icon i {
+    color: var(--accent-primary);
+}
+
+.deforested-card .stat-icon i {
+    color: var(--accent-secondary);
+}
+
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+.forest-glow {
+    background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
+}
+
+.deforested-glow {
+    background: radial-gradient(circle, var(--accent-secondary) 0%, transparent 70%);
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.progress-ring {
+    margin: 0 auto;
+}
+
+.progress-circle {
+    transform: rotate(-90deg);
+}
+
+.progress-bg {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 8;
+}
+
+.progress-bar {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 314;
+    stroke-dashoffset: 314;
+    transition: stroke-dashoffset 1s ease;
+}
+
+.forest-progress {
+    stroke: var(--accent-primary);
+}
+
+.deforested-progress {
+    stroke: var(--accent-secondary);
+}
+
+/* Images Grid */
+.images-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.image-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.image-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-card);
+}
+
+.image-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.image-header i {
+    color: var(--accent-primary);
+}
+
+.image-body {
+    position: relative;
+    overflow: hidden;
+}
+
+.result-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-card:hover .image-overlay {
+    opacity: 1;
+}
+
+.image-card:hover .result-image {
+    transform: scale(1.1);
+}
+
+.overlay-content i {
+    font-size: 2rem;
+    color: white;
+}
+
+/* Legend */
+.legend-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.legend-card h5 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.legend-card i {
+    color: var(--accent-primary);
+}
+
+.legend-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+}
+
+.forest-legend {
+    background: var(--accent-primary);
+}
+
+.deforested-legend {
+    background: var(--accent-secondary);
+}
+
+.powered-by {
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 0.9rem;
+}
+
+.powered-by i {
+    color: var(--accent-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .tech-badges {
+        gap: 1rem;
+    }
+    
+    .stats-grid,
+    .images-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .upload-card {
+        margin: 0 1rem;
+    }
+    
+    .file-drop-zone {
+        padding: 2rem 1rem;
+    }
+}
+</style>
 {% endblock %} 

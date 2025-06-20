@@ -1,0 +1,69 @@
+# Version control
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.venv/
+venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Large data files (these should be downloaded at runtime)
+climate_data/
+*.csv
+*.pkl
+*.h5
+*.hdf5
+
+# Local uploads and results (will be recreated)
+static/uploads/
+static/results/
+static/data/
+
+# Test files
+test_*.py
+*_test.py
+
+# Documentation
+README.md
+*.md
+
+# Scripts
+*.sh
+*.bat
+
+# Environment files
+.env
+.env.*
+
+# Docker
+Dockerfile*
+docker-compose* 

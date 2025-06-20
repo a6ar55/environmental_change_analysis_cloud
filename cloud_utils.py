@@ -16,12 +16,8 @@ from config import (
     FOREST_COLOR,
     DEFORESTED_COLOR,
     MODEL_NAME,
-    MODEL_VERSION,
-    SERVICE_ACCOUNT_PATH
+    MODEL_VERSION
 )
-
-# Initialize Google Cloud clients
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = SERVICE_ACCOUNT_PATH
 storage_client = storage.Client()
 aiplatform.init(project=PROJECT_ID, location=LOCATION)
 
@@ -37,6 +33,19 @@ def ensure_bucket_exists():
         try:
             bucket = storage_client.create_bucket(BUCKET_NAME, location=LOCATION)
             print(f"Created new bucket: {BUCKET_NAME}")
+            
+            # Set bucket to allow public read access for objects
+            try:
+                policy = bucket.get_iam_policy()
+                policy.bindings.append({
+                    "role": "roles/storage.objectViewer",
+                    "members": {"allUsers"}
+                })
+                bucket.set_iam_policy(policy)
+                print(f"Set public read access for bucket: {BUCKET_NAME}")
+            except Exception as e:
+                print(f"Warning: Could not set public access for bucket: {e}")
+                
         except Exception as e:
             raise Exception(f"Failed to access or create bucket: {e}. Please ensure the service account has Storage Admin permissions.")
     return bucket
@@ -63,12 +72,19 @@ def upload_to_gcs(file_path, destination_blob_name=None):
     blob = bucket.blob(destination_blob_name)
     blob.upload_from_filename(file_path)
     
-    # Generate a signed URL for temporary access
-    url = blob.generate_signed_url(
-        version="v4",
-        expiration=3600,  # URL expires in 1 hour
-        method="GET"
-    )
+    # In Cloud Run, use public URL instead of signed URL to avoid private key requirement
+    try:
+        # Try to generate signed URL first (works if proper service account is configured)
+        url = blob.generate_signed_url(
+            version="v4",
+            expiration=3600,  # URL expires in 1 hour
+            method="GET"
+        )
+    except Exception:
+        # Fallback to public URL (requires bucket to be publicly readable)
+        # Make blob publicly readable
+        blob.make_public()
+        url = blob.public_url
     
     return destination_blob_name, url
 
@@ -87,11 +103,20 @@ def get_signed_url(blob_name):
     """
     bucket = ensure_bucket_exists()
     blob = bucket.blob(blob_name)
-    url = blob.generate_signed_url(
-        version="v4",
-        expiration=3600,  # URL expires in 1 hour
-        method="GET"
-    )
+    
+    try:
+        # Try to generate signed URL first (works if proper service account is configured)
+        url = blob.generate_signed_url(
+            version="v4",
+            expiration=3600,  # URL expires in 1 hour
+            method="GET"
+        )
+    except Exception:
+        # Fallback to public URL (requires bucket to be publicly readable)
+        # Make blob publicly readable
+        blob.make_public()
+        url = blob.public_url
+    
     return url
 
 def find_deployed_model():

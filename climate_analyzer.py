@@ -15,12 +15,10 @@ from google.cloud import storage
 from config import (
     PROJECT_ID, 
     LOCATION, 
-    BUCKET_NAME, 
-    SERVICE_ACCOUNT_PATH
+    BUCKET_NAME
 )
 
-# Initialize Google Cloud
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = SERVICE_ACCOUNT_PATH
+# Initialize Google Cloud (uses Application Default Credentials in Cloud Run)
 storage_client = storage.Client()
 
 class ClimateAnalyzer:

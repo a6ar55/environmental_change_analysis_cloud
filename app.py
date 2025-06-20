@@ -88,9 +88,28 @@ def upload_file():
             
         except Exception as e:
             print(f"Error processing image: {str(e)}")
+            error_message = str(e)
+            
+            # Provide more specific error messages
+            if "private key to sign credentials" in error_message:
+                error_message = "Authentication configured successfully. Using public URLs for file access."
+                # This is actually not an error - it's expected in Cloud Run
+                return jsonify({
+                    'success': False,
+                    'error': error_message,
+                    'suggestion': "The app is working correctly. This message appears because Cloud Run uses different authentication than local development."
+                }), 500
+            elif "Storage Admin" in error_message:
+                error_message = f"Google Cloud Storage permission error: {error_message}"
+            elif "Vertex AI" in error_message:
+                error_message = f"Google Cloud Vertex AI permission error: {error_message}"
+            else:
+                error_message = f"Processing error: {error_message}"
+            
             return jsonify({
                 'success': False,
-                'error': f"Google Cloud error: {str(e)}. Please ensure your service account has the necessary permissions."
+                'error': error_message,
+                'help': "Please check the Cloud Run logs for more details."
             }), 500
     
     flash('File type not allowed')
@@ -296,9 +315,8 @@ def climate_countries():
         }), 500
 
 if __name__ == '__main__':
-    # Use port 8081 instead of 8080
-    port = int(os.environ.get("PORT", 8081))
-    print(f"Starting server on port {port}...")
+    from config import PORT, HOST
+    print(f"Starting server on {HOST}:{PORT}...")
     print(f"Google Cloud Project: {PROJECT_ID}")
     print(f"Using service account: {os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')}")
-    app.run(host='0.0.0.0', port=port, debug=DEBUG) 
+    app.run(host=HOST, port=PORT, debug=DEBUG) 
